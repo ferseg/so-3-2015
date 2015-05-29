@@ -29,3 +29,4 @@ nbproject/*
 *.swp
 *.DS_Store
 *.lock
+/FileSystem/nbproject/private/
