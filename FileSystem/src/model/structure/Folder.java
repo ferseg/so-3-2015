@@ -5,9 +5,6 @@
  */
 package model.structure;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  *
  * Folder.java
@@ -17,11 +14,13 @@ import java.util.Map;
  * @modified May 30, 2015
  * @description Class that
  */
-public class Folder extends File<Map<String, File>> {
+public class Folder extends File<String, File> {
 
     public Folder(File pParent, String pName) {
         super(pParent, pName);
-        _Content = new HashMap<>();
+        if(_Parent != null) {
+            _Parent.put(pName, this);
+        }
     }
 
     /**
@@ -31,8 +30,8 @@ public class Folder extends File<Map<String, File>> {
      * @return true if the files is added, false otherwise
      */
     public boolean addFile(File pFile) {
-        if (!_Content.containsKey(pFile._Name)) {
-            _Content.put(pFile._Name, pFile);
+        if (!containsKey(pFile._Name)) {
+            put(pFile._Name, pFile);
             updateSize();
             return true;
         }
@@ -41,13 +40,13 @@ public class Folder extends File<Map<String, File>> {
 
     @Override
     protected int calculateSize() {
-        return _Content.size();
+        return size();
     }
 
     @Override
     public File removeFile(String pFilename) {
-        if(_Content.containsKey(pFilename)) {
-            File file = _Content.remove(pFilename);
+        if(containsKey(pFilename)) {
+            File file = remove(pFilename);
             updateSize();
             return file;
         }

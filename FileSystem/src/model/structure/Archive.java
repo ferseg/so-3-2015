@@ -6,7 +6,8 @@
 
 package model.structure;
 
-import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  *
@@ -16,30 +17,61 @@ import java.util.Map;
  * @modified May 30, 2015
  * @description File type archive
  */
-public class Archive extends File<Map<Integer, String>> {
-
+public class Archive extends File<Integer, String> {
+    
+    private String _Extension;
+    
     public Archive(File pParent, String pFilename) {
         super(pParent, pFilename);
-        
+        _Extension = ".def";
+        initParent(pFilename);
     }
     
-    public boolean addLine(String pContent) {
-        return true;
+    public Archive(File pParent, String pFilename, String pExtension) {
+        super(pParent, pFilename);
+        _Extension = pExtension;
+        initParent(pFilename);
+    }
+    
+    public boolean addLine(int pLineNumber, String pContent) {
+        if(!containsKey(pLineNumber)) {
+            put(pLineNumber, pContent);
+            updateSize();
+            return true;
+        }
+        return false;
+    }
+    
+    public Set<Entry<Integer, String>> getContent() {
+        return entrySet();
     }
 
     @Override
     protected int calculateSize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int size = 0;
+        size = entrySet().stream().map((entry) -> entry.getValue().length()).reduce(size, Integer::sum);
+        return size;
     }
 
     @Override
     public File removeFile(String pName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return _Parent.removeFile(pName);
     }
 
     @Override
     public boolean renameFile(File pFile, String pNewName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       pFile._Parent.renameFile(pFile, pNewName);
+       return true;
+    }
+
+    public String getExtension() {
+        return _Extension;
+    }
+
+    private void initParent(String pFilename) {
+        if(_Parent != null) {
+            _Parent.put(pFilename, this);
+        }
     }
 
 }
