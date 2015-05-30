@@ -60,8 +60,11 @@ public class Archive extends File<Integer, String> {
 
     @Override
     public boolean renameFile(File pFile, String pNewName) {
-       pFile._Parent.renameFile(pFile, pNewName);
-       return true;
+       return pFile._Parent.renameFile(pFile, pNewName);
+    }
+    
+    public boolean renameFile(String pNewName) {
+        return _Parent.renameFile(this, pNewName);
     }
 
     public String getExtension() {
