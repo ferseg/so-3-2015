@@ -5,17 +5,22 @@
  */
 package model.structure;
 
+import java.util.HashMap;
+
 /**
  *
  * @author fsegovia
+ * @param <K> The key
+ * @param <V> The value
  * @since 30/05/2015
  */
-public abstract class File<T> {
+public abstract class File<K, V> extends HashMap<K, V> {
 
+    private final static String FILE_DIVIDER = "/";
+    private final static int FIRST_ARRAY_ELEMENT = 0;
     protected File _Parent;
     protected String _Name;
     protected int _Size;
-    protected T _Content;
 
     public File(File pParent, String pName) {
         _Parent = pParent;
@@ -37,7 +42,13 @@ public abstract class File<T> {
      * @return
      */
     public abstract File removeFile(String pName); // Could be changed
-    
+
+    /**
+     *
+     * @param pFile
+     * @param pNewName
+     * @return
+     */
     public abstract boolean renameFile(File pFile, String pNewName);
 
     /**
@@ -56,6 +67,10 @@ public abstract class File<T> {
         return getPath(this);
     }
 
+    public int getSize() {
+        return _Size;
+    }
+
     /**
      * Gets the path of a file
      *
@@ -64,11 +79,28 @@ public abstract class File<T> {
      */
     public static String getPath(File pFile) {
         String path = pFile._Name;
-        File actual;
-        while ((actual = pFile._Parent) != null) {
-            path = actual._Name + "/" + path;
+        File actual = pFile;
+        while ((actual = actual._Parent) != null) {
+            path = actual._Name + FILE_DIVIDER + path;
         }
         return path;
+    }
+
+    /**
+     * Gets a file depending on the path and the root folder.
+     *
+     * @param pPath
+     * @return
+     */
+    public File getFile(String pPath) {
+        String routes[] = pPath.split(FILE_DIVIDER);
+        File actualFile = (File) get((K) routes[FIRST_ARRAY_ELEMENT]);
+        for (int index = 1; index < routes.length; index++) {
+            String actualRoute = routes[index];
+            actualFile = (File) actualFile.get(actualRoute);
+        }
+
+        return actualFile;
     }
 
 }
