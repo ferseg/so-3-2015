@@ -20,6 +20,7 @@ core
 nbproject/*
 !nbproject/project.properties
 !nbproject/project.xml
+*.properties
  
 #general swap/backup files
 *.so
