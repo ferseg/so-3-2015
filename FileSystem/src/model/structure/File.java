@@ -6,6 +6,7 @@
 package model.structure;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  *
@@ -101,6 +102,10 @@ public abstract class File<K, V> extends HashMap<K, V> {
         }
 
         return actualFile;
+    }
+    
+    public Set<Entry<K, V>> getContent() {
+        return entrySet();
     }
 
 }

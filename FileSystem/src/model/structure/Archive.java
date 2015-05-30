@@ -41,10 +41,6 @@ public class Archive extends File<Integer, String> {
         }
         return false;
     }
-    
-    public Set<Entry<Integer, String>> getContent() {
-        return entrySet();
-    }
 
     @Override
     protected int calculateSize() {
