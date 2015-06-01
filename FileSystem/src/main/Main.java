@@ -37,8 +37,12 @@ public class Main {
         subFolder = new Folder(subFolder2, "Private");
         subFolder = new Folder(subFolder, "Mine");
         archive = new Archive(subFolder, "Some.txt");
-        Folder res = (Folder) folder.getFile("IS/Projects/Private");
-        System.out.println(res.getPath());
+        Folder res = (Folder) folder.getFile("IS/Projects");
+        boolean result = folder.moveFile("IS/Projects/archivito2", "IS/Projects/RenamedArchivito");
+        System.out.println("Result: " + result);
+        Archive ar = (Archive) folder.getFile("IS/Projects/RenamedArchivito");
+        System.out.println("Archive path: " + ar.getPath());
+        System.out.println("-->" + res.getPath());
         for(Entry<String, File> actual : res.getContent()) {
             String name = actual.getKey();
             File value = actual.getValue();

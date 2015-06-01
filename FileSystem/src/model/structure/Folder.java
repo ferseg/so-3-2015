@@ -31,6 +31,7 @@ public class Folder extends File<String, File> {
      */
     public boolean addFile(File pFile) {
         if (!containsKey(pFile._Name)) {
+            pFile._Parent = this;
             put(pFile._Name, pFile);
             updateSize();
             return true;
