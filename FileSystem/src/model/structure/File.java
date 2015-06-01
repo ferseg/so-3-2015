@@ -72,6 +72,10 @@ public abstract class File<K, V> extends HashMap<K, V> {
         return _Size;
     }
 
+    public Set<Entry<K, V>> getContent() {
+        return entrySet();
+    }
+
     /**
      * Gets the path of a file
      *
@@ -95,17 +99,47 @@ public abstract class File<K, V> extends HashMap<K, V> {
      */
     public File getFile(String pPath) {
         String routes[] = pPath.split(FILE_DIVIDER);
-        File actualFile = (File) get((K) routes[FIRST_ARRAY_ELEMENT]);
-        for (int index = 1; index < routes.length; index++) {
-            String actualRoute = routes[index];
+        File actualFile = this;
+        for (String actualRoute : routes) {
             actualFile = (File) actualFile.get(actualRoute);
+            if (actualFile == null) {
+                break;
+            }
         }
-
         return actualFile;
     }
-    
-    public Set<Entry<K, V>> getContent() {
-        return entrySet();
+
+    public boolean moveFile(String pOldPath, String pNewPath) {
+        File fileToBeMoved = getFile(pOldPath);
+        File destination = getFile(pNewPath);
+        if (fileToBeMoved == null || destination != null 
+                || fileToBeMoved._Parent == null) {
+            return false;
+        }
+        fileToBeMoved._Parent.removeFile(fileToBeMoved._Name);
+        return insertFileInPath(fileToBeMoved, pNewPath);
+    }
+
+    /**
+     * Inserts a file into a path
+     *
+     * @param pFile The file to be inserted
+     * @param pPath The path in which the file will be inserted
+     * @return true if it's inserted, false otherwise.
+     */
+    public boolean insertFileInPath(File pFile, String pPath) {
+        int pivot = pPath.lastIndexOf("/");
+        String path = pPath.substring(0, pivot);
+        String filename = pPath.substring(pivot + 1);
+        File parentFile = getFile(path);
+        // The file cannot be inserted if the parent is null or the parent
+        // is an archive
+        if (parentFile == null || parentFile instanceof Archive) {
+            return false;
+        }
+        pFile._Name = filename;
+        ((Folder) parentFile).addFile(pFile);
+        return true;
     }
 
 }
