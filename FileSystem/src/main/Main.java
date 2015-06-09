@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import model.structure.Archive;
 import model.structure.File;
 import model.structure.Folder;
+import model.structure.VirtualMemory;
 
 /**
  *
@@ -21,37 +22,32 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        Folder folder = new Folder(null, "Documentos");
-        Folder subFolder = new Folder(folder, "IS");
-        Folder subFolder2 = new Folder(subFolder, "Projects");
-        Archive archive = new Archive(subFolder2, "privado.txt");
-        
-        archive.addLine(1, "Hello");
-        archive.addLine(5, "Wold!");
-        archive = (Archive) folder.getFile("IS/Projects/privado.txt");
-        String path = archive.getPath();
-        System.out.println(path);
-        archive = new Archive(subFolder2, "archivito");
-        archive = new Archive(subFolder2, "archivito2");
-        subFolder = new Folder(subFolder2, "Private");
-        subFolder = new Folder(subFolder, "Mine");
-        archive = new Archive(subFolder, "Some.txt");
-        Folder res = (Folder) folder.getFile("IS/Projects");
-        boolean result = folder.moveFile("IS/Projects/archivito2", "IS/Projects/RenamedArchivito");
-        System.out.println("Result: " + result);
-        Archive ar = (Archive) folder.getFile("IS/Projects/RenamedArchivito");
-        System.out.println("Archive path: " + ar.getPath());
-        System.out.println("-->" + res.getPath());
-        for(Entry<String, File> actual : res.getContent()) {
-            String name = actual.getKey();
-            File value = actual.getValue();
-            if(value instanceof Folder) {
-                System.out.print("Folder ");
-            }
-            System.out.println("Name : " + name + ", content: " + value);
-        }
-        
-    }
+        /*VirtualMemory disco = new VirtualMemory(5,5);
+        System.out.println(disco.toString());
+        disco.WriteSector("|");
+        System.out.println(disco.toString());
+        disco.WriteSector("aaa");
+        System.out.println(disco.toString());
+        disco.WriteSector("hola mundo");
+        System.out.println(disco.toString());*/
     
+        VirtualMemory disco = new VirtualMemory(5,2);
+        System.out.println(disco.toString());
+        int sec1[] = disco.WriteSector("as");
+        
+        for(int i=0;i<sec1.length;i++)
+            System.out.print(sec1[i] + " ");
+        System.out.print("\n");
+        
+        System.out.println(disco.toString());
+        int sec2[] = disco.WriteSector("hola mundo");
+
+        for(int i=0;i<sec2.length;i++)
+            System.out.print(sec2[i] + " ");
+        System.out.print("\n");
+        System.out.println(disco.toString());
+        
+        disco.ErraseSector(new int[]{1});
+        System.out.println(disco.toString());
+    }
 }
