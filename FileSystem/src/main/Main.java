@@ -22,32 +22,27 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /*VirtualMemory disco = new VirtualMemory(5,5);
+        VirtualMemory disco = new VirtualMemory(5,5);
         System.out.println(disco.toString());
-        disco.WriteSector("|");
+        disco.WriteSector("");
         System.out.println(disco.toString());
         disco.WriteSector("aaa");
         System.out.println(disco.toString());
         disco.WriteSector("hola mundo");
-        System.out.println(disco.toString());*/
-    
-        VirtualMemory disco = new VirtualMemory(5,2);
         System.out.println(disco.toString());
-        int sec1[] = disco.WriteSector("as");
-        
-        for(int i=0;i<sec1.length;i++)
-            System.out.print(sec1[i] + " ");
-        System.out.print("\n");
-        
+        disco.ErraseSector(new int[]{2});
         System.out.println(disco.toString());
-        int sec2[] = disco.WriteSector("hola mundo");
-
-        for(int i=0;i<sec2.length;i++)
-            System.out.print(sec2[i] + " ");
-        System.out.print("\n");
+        disco.WriteSector("asd_main");
         System.out.println(disco.toString());
-        
+        /*
+        VirtualMemory disco = new VirtualMemory(5,5);
+        System.out.println(disco.toString());
+        disco.WriteSector("hola mundo");
+        System.out.println(disco.toString());
         disco.ErraseSector(new int[]{1});
         System.out.println(disco.toString());
+        disco.ReplaceSector("esto es una prueba", new int[]{0});
+        System.out.println(disco.toString());*/
+        
     }
 }
