@@ -45,8 +45,9 @@ public class VirtualMemory {
     }
     
     public int[] WriteSector(String pData){
-        int sectors[] = getEmptyArray();
-        if(_Size * _FreeSectors > pData.length()){
+        int size = 0;
+        int sectors[] = new int[_Sectors];
+        if(_Size * _FreeSectors >= pData.length()){
             int sectorIndex = 0;
             int storedIndex = 0;
             do{
@@ -63,8 +64,9 @@ public class VirtualMemory {
                 }
                 sectorIndex++;
             }while(!pData.equals(EMPTY_STRING));
+            size = storedIndex;
         }
-        return sectors;
+        return getSectors(sectors,size);
     }
     
     public void ErraseSector(int pSectors[]){
@@ -78,6 +80,18 @@ public class VirtualMemory {
             _FreeSectors++;
         }
         _FileManager.WriteFile(JoinString(fileContent));
+    }
+    
+    public int[] ReplaceSector(String pData,int pSectors[]){
+        int freeSpace = _FreeSectors * _Size;
+        int usedSpace = pSectors.length * _Size;
+        if(freeSpace + usedSpace >= pData.length()){
+            ErraseSector(pSectors);
+            return WriteSector(pData);
+        }
+        else{
+            return new int[]{INVALID_VALUE};
+        }
     }
     
     public String toString(){
@@ -133,10 +147,16 @@ public class VirtualMemory {
         return temp;
     }
     
-    private int[] getEmptyArray(){
-        int temp[] = new int[_Sectors];
-        for(int i=0;i<_Sectors;i++){
-            temp[i] = INVALID_VALUE;
+    private int[] getSectors(int pSectors[],int pSize){
+        int temp[] = new int[pSize];
+        if(pSize == 0){
+            temp = new int[]{INVALID_VALUE};
+        }
+        else{
+            temp = new int[pSize];
+            for(int sectorIndex = 0 ; sectorIndex<pSize;sectorIndex++){
+                temp[sectorIndex] = pSectors[sectorIndex];
+            }
         }
         return temp;
     }
