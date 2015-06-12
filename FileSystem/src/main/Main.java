@@ -34,8 +34,8 @@ public class Main {
         System.out.println(disco.toString());
         disco.WriteSector("asd_main");
         System.out.println(disco.toString());
-        /*
-        VirtualMemory disco = new VirtualMemory(5,5);
+        
+        /*VirtualMemory disco = new VirtualMemory(5,5);
         System.out.println(disco.toString());
         disco.WriteSector("hola mundo");
         System.out.println(disco.toString());
@@ -43,6 +43,7 @@ public class Main {
         System.out.println(disco.toString());
         disco.ReplaceSector("esto es una prueba", new int[]{0});
         System.out.println(disco.toString());*/
+        
         
     }
 }
