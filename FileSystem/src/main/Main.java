@@ -42,7 +42,7 @@ public class Main {
         disco.ErraseSector(new int[]{1});
         System.out.println(disco.toString());
         disco.ReplaceSector("esto es una prueba", new int[]{0});
-        System.out.println(disco.toString());*/
+        System.out.println(disco.toString());*/ 
         
         
     }
