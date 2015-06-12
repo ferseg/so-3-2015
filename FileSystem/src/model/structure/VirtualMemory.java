@@ -20,6 +20,7 @@ public class VirtualMemory {
     static final String END_OF_LINE = "\n";
     static final String EMPTY_STRING = "";
     static final char EMPTY_BYTE = '0';
+    static final char EMPTY_SPACE = ' ';
     static final char NULL_BYTE = '\0';
     static final int INVALID_VALUE = -1;
     static final int EMPTY = 0;
@@ -134,7 +135,7 @@ public class VirtualMemory {
         else{
             temp += pData;
             while(temp.length()<_Size)
-                temp += EMPTY_BYTE;
+                temp += EMPTY_SPACE;
         }
         return temp;
     }
