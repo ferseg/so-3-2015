@@ -15,7 +15,12 @@ package model.structure;
  * @description Class that
  */
 public class Folder extends File<String, File> {
-
+    static String s_pStart;
+    static final char EMPTY_SPACE = ' ';
+    static final char NULL_SPACE = '\0';
+    static final char END_OF_LINE = '\n';
+    static final char SUB_DIR = '└';
+    
     public Folder(File pParent, String pName) {
         super(pParent, pName);
         if(_Parent != null) {
@@ -64,5 +69,25 @@ public class Folder extends File<String, File> {
         }
         return false;
     }
-
+    
+    public String print(){
+        s_pStart = _Name + END_OF_LINE;
+        print(0);
+        return s_pStart;
+    }
+    
+    public void print(int pSpace){
+        String space = new String(new char[pSpace]).replace(NULL_SPACE, EMPTY_SPACE);
+        for(Entry<String, File> actual : getContent()){
+            String fileName = actual.getKey();
+            try{
+                Folder content = (Folder)actual.getValue();
+                s_pStart += space + SUB_DIR + fileName + END_OF_LINE;
+                content.print(pSpace+1);
+            }
+            catch(Exception Ex){
+                s_pStart += space + SUB_DIR + fileName + END_OF_LINE;
+            }
+        }
+    }
 }
