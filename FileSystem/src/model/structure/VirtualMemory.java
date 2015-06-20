@@ -25,7 +25,8 @@ public class VirtualMemory {
     static final int INVALID_VALUE = -1;
     static final int EMPTY = 0;
     static final int BUSSY = 1;
-    
+    static final int ERRASE = 1;
+    static final int DONT_ERRASE = 0;
     
     private int _Size;
     private int _Sectors;
@@ -37,7 +38,7 @@ public class VirtualMemory {
         _Size = pSize;
         _Sectors = _FreeSectors = pSectors;
         _SectorsState = new int[pSectors];
-        _FileManager = new FileManager(FILE_NAME);
+        _FileManager = new FileManager(FILE_NAME,ERRASE);
         String line = new String(new char[_Size]).replace(NULL_BYTE, EMPTY_BYTE);
         String temp = EMPTY_STRING;
         for(int i=0;i<pSectors;i++)
@@ -93,6 +94,22 @@ public class VirtualMemory {
         else{
             return new int[]{INVALID_VALUE};
         }
+    }
+    
+    public void SectorsToFile(int pSectors[],String pFile){
+        String content = EMPTY_STRING;
+        String fileContent[] = SplitString(_FileManager.ReadFile());
+        for(int i= 0;i < pSectors.length;i++){
+            content += fileContent[pSectors[i]];
+        }
+        FileManager fileManager = new FileManager(pFile,ERRASE);
+        fileManager.WriteFile(content);
+    }
+    
+    public int[] FileToSectors(String pFile){
+        FileManager fileManager = new FileManager(pFile,DONT_ERRASE);
+        String content = fileManager.ReadFile();
+        return WriteSector(content);
     }
     
     public String toString(){
