@@ -26,13 +26,15 @@ public class FileManager{
         
     private File _File;
     
-    public FileManager(String pFileName){
+    public FileManager(String pFileName,int pErrase){
         try{
-            _File = new File(pFileName);
+            _File = new File(pFileName); 
             _File.createNewFile();
-            FileWriter fw = new FileWriter(_File);
-            fw.write(EMPTY_STRING);
-            fw.close();
+            if(pErrase == 1){
+                FileWriter fw = new FileWriter(_File);
+                fw.write(EMPTY_STRING);
+                fw.close();
+            }
         }
         catch(Exception Ex){
             System.out.println(FILE_ERROR);
@@ -52,10 +54,13 @@ public class FileManager{
     
     public String ReadFile(){
         try{
-            BufferedReader br = new BufferedReader(new FileReader(_File.getName()));
+            BufferedReader br = new BufferedReader(new FileReader(_File));
             String temp = EMPTY_STRING;
             temp = br.readLine();
             br.close();
+            if(temp == null){
+                temp = "";
+            }
             return temp;
         }
         catch(Exception Ex){
