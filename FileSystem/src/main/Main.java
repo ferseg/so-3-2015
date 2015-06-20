@@ -22,28 +22,27 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        VirtualMemory disco = new VirtualMemory(5,5);
-        System.out.println(disco.toString());
-        disco.WriteSector("");
-        System.out.println(disco.toString());
-        disco.WriteSector("aaa");
-        System.out.println(disco.toString());
-        disco.WriteSector("hola mundo");
-        System.out.println(disco.toString());
-        disco.ErraseSector(new int[]{2});
-        System.out.println(disco.toString());
-        disco.WriteSector("asd_main");
-        System.out.println(disco.toString());
-        
-        /*VirtualMemory disco = new VirtualMemory(5,5);
-        System.out.println(disco.toString());
-        disco.WriteSector("hola mundo");
-        System.out.println(disco.toString());
-        disco.ErraseSector(new int[]{1});
-        System.out.println(disco.toString());
-        disco.ReplaceSector("esto es una prueba", new int[]{0});
-        System.out.println(disco.toString());*/ 
         
         
+        Folder root = new Folder(null, "home");
+          Folder subFolder = new Folder(root, "Documents");
+            Archive archive = new Archive(subFolder, "privado.txt");
+            Folder subFolder3 = new Folder(subFolder, "Fotos vacaciones");
+              Archive archive2 = new Archive(subFolder3, "foto1.png");
+              Archive archive3 = new Archive(subFolder3, "foto2.png");
+              Archive archive4 = new Archive(subFolder3, "foto3.png");
+                
+            Folder subFolder4 = new Folder(subFolder, "Musica");
+              Archive archive5 = new Archive(subFolder4, "cancion1.mp3");
+              Archive archive6 = new Archive(subFolder4, "cancion2.mp3");
+              Archive archive7 = new Archive(subFolder4, "cacion3.mp3");
+            Folder subFolder5 = new Folder(subFolder, "Tec");
+              Archive archive8 = new Archive(subFolder5, "trabajo1.docx");
+              Archive archive9 = new Archive(subFolder5, "trabajo2.docx");
+              Archive archive10 = new Archive(subFolder5, "trabajo3.docx");
+          Folder subFolder2 = new Folder(root, "Projects");
+          Archive archive11 = new Archive(root, "text.txt");
+        System.out.println(root.print() + "\n");
+        System.out.println(subFolder.print()); 
     }
 }
