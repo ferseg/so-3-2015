@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import model.structure.Archive;
 import model.structure.File;
 import model.structure.Folder;
+import model.structure.VirtualMemory;
 
 /**
  *
@@ -22,36 +23,26 @@ public class Main {
      */
     public static void main(String[] args) {
         
-        Folder folder = new Folder(null, "Documentos");
-        Folder subFolder = new Folder(folder, "IS");
-        Folder subFolder2 = new Folder(subFolder, "Projects");
-        Archive archive = new Archive(subFolder2, "privado.txt");
         
-        archive.addLine(1, "Hello");
-        archive.addLine(5, "Wold!");
-        archive = (Archive) folder.getFile("IS/Projects/privado.txt");
-        String path = archive.getPath();
-        System.out.println(path);
-        archive = new Archive(subFolder2, "archivito");
-        archive = new Archive(subFolder2, "archivito2");
-        subFolder = new Folder(subFolder2, "Private");
-        subFolder = new Folder(subFolder, "Mine");
-        archive = new Archive(subFolder, "Some.txt");
-        Folder res = (Folder) folder.getFile("IS/Projects");
-        boolean result = folder.moveFile("IS/Projects/archivito2", "IS/Projects/RenamedArchivito");
-        System.out.println("Result: " + result);
-        Archive ar = (Archive) folder.getFile("IS/Projects/RenamedArchivito");
-        System.out.println("Archive path: " + ar.getPath());
-        System.out.println("-->" + res.getPath());
-        for(Entry<String, File> actual : res.getContent()) {
-            String name = actual.getKey();
-            File value = actual.getValue();
-            if(value instanceof Folder) {
-                System.out.print("Folder ");
-            }
-            System.out.println("Name : " + name + ", content: " + value);
-        }
-        
+        Folder root = new Folder(null, "home");
+          Folder subFolder = new Folder(root, "Documents");
+            Archive archive = new Archive(subFolder, "privado.txt");
+            Folder subFolder3 = new Folder(subFolder, "Fotos vacaciones");
+              Archive archive2 = new Archive(subFolder3, "foto1.png");
+              Archive archive3 = new Archive(subFolder3, "foto2.png");
+              Archive archive4 = new Archive(subFolder3, "foto3.png");
+                
+            Folder subFolder4 = new Folder(subFolder, "Musica");
+              Archive archive5 = new Archive(subFolder4, "cancion1.mp3");
+              Archive archive6 = new Archive(subFolder4, "cancion2.mp3");
+              Archive archive7 = new Archive(subFolder4, "cacion3.mp3");
+            Folder subFolder5 = new Folder(subFolder, "Tec");
+              Archive archive8 = new Archive(subFolder5, "trabajo1.docx");
+              Archive archive9 = new Archive(subFolder5, "trabajo2.docx");
+              Archive archive10 = new Archive(subFolder5, "trabajo3.docx");
+          Folder subFolder2 = new Folder(root, "Projects");
+          Archive archive11 = new Archive(root, "text.txt");
+        System.out.println(root.print() + "\n");
+        System.out.println(subFolder.print()); 
     }
-    
 }
