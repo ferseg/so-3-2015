@@ -49,6 +49,7 @@ public class Archive extends File<Integer, String> {
     
     public boolean addContent(Map<Integer, String> pContent) {
         putAll(pContent);
+        updateSize();
         return true;
     }
 

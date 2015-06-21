@@ -65,7 +65,7 @@ public class VirtualMemory {
                     _FileManager.WriteFile(content);
                     _SectorsState[sectorIndex] = BUSSY;
                     _FreeSectors--;
-                    result.put(sectorIndex, content);
+                    result.put(sectorIndex, temp);
                     storedIndex++;
                 }
                 sectorIndex++;

@@ -37,7 +37,8 @@ public class Folder extends File<String, File> {
     public boolean addFile(File pFile) {
         if (!containsKey(pFile._Name)) {
             pFile._Parent = this;
-            put(pFile._Name, pFile);
+            String extension = pFile instanceof Archive && !pFile._Name.contains(".") ? ((Archive)pFile).getExtension() : "";
+            put(pFile._Name + extension, pFile);
             updateSize();
             return true;
         }
@@ -90,4 +91,6 @@ public class Folder extends File<String, File> {
             }
         }
     }
+    
+    
 }
