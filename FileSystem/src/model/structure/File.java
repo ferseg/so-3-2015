@@ -128,7 +128,7 @@ public abstract class File<K, V> extends HashMap<K, V> {
      * @return true if it's inserted, false otherwise.
      */
     public boolean insertFileInPath(File pFile, String pPath) {
-        int pivot = pPath.lastIndexOf("/");
+        int pivot = pPath.lastIndexOf(FILE_DIVIDER);
         String path = pPath.substring(0, pivot);
         String filename = pPath.substring(pivot + 1);
         File parentFile = getFile(path);
