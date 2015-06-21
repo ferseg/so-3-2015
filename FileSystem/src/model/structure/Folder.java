@@ -16,7 +16,7 @@ package model.structure;
  */
 public class Folder extends File<String, File> {
     static String s_Start;
-    static final char EMPTY_SPACE = '|';
+    static final char EMPTY_SPACE = ' ';
     static final char NULL_SPACE = '\0';
     static final char END_OF_LINE = '\n';
     static final char SUB_DIR = '└';

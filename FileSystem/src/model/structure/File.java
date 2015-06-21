@@ -5,6 +5,7 @@
  */
 package model.structure;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -22,11 +23,14 @@ public abstract class File<K, V> extends HashMap<K, V> {
     protected File _Parent;
     protected String _Name;
     protected int _Size;
+    protected Date _CreationDate;
+    protected Date _LastModification;
 
     public File(File pParent, String pName) {
         _Parent = pParent;
         _Name = pName;
         _Size = 0;
+        _CreationDate = _LastModification = new Date();
     }
 
     /**
@@ -107,6 +111,14 @@ public abstract class File<K, V> extends HashMap<K, V> {
             }
         }
         return actualFile;
+    }
+    
+    public File getParent() {
+        return _Parent;
+    }
+    
+    public String getName() {
+        return _Name;
     }
 
     public boolean moveFile(String pOldPath, String pNewPath) {

@@ -6,6 +6,8 @@
 package model.structure;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -46,9 +48,10 @@ public class VirtualMemory {
         _FileManager.WriteFile(temp);
     }
     
-    public int[] WriteSector(String pData){
+    public Map<Integer, String> WriteSector(String pData){
         int size = 0;
         int sectors[] = new int[_Sectors];
+        Map result = new HashMap();
         if(_Size * _FreeSectors >= pData.length()){
             int sectorIndex = 0;
             int storedIndex = 0;
@@ -58,17 +61,19 @@ public class VirtualMemory {
                     pData = getFinish(pData);
                     String fileContent[] = SplitString(_FileManager.ReadFile());
                     fileContent[sectorIndex] = temp;
-                    _FileManager.WriteFile(JoinString(fileContent));
+                    String content = JoinString(fileContent);
+                    _FileManager.WriteFile(content);
                     _SectorsState[sectorIndex] = BUSSY;
                     _FreeSectors--;
-                    sectors[storedIndex] = sectorIndex;
+                    result.put(sectorIndex, content);
                     storedIndex++;
                 }
                 sectorIndex++;
-            }while(!pData.equals(EMPTY_STRING));
+            } while(!pData.equals(EMPTY_STRING));
             size = storedIndex;
         }
-        return getSectors(sectors,size);
+           
+        return result;
     }
     
     public void ErraseSector(int pSectors[]){
@@ -84,7 +89,7 @@ public class VirtualMemory {
         _FileManager.WriteFile(JoinString(fileContent));
     }
     
-    public int[] ReplaceSector(String pData,int pSectors[]){
+    public Map<Integer, String> ReplaceSector(String pData,int pSectors[]){
         int freeSpace = _FreeSectors * _Size;
         int usedSpace = pSectors.length * _Size;
         if(freeSpace + usedSpace >= pData.length()){
@@ -92,7 +97,7 @@ public class VirtualMemory {
             return WriteSector(pData);
         }
         else{
-            return new int[]{INVALID_VALUE};
+            return null;
         }
     }
     
@@ -106,7 +111,7 @@ public class VirtualMemory {
         fileManager.WriteFile(content);
     }
     
-    public int[] FileToSectors(String pFile){
+    public Map<Integer, String> FileToSectors(String pFile){
         FileManager fileManager = new FileManager(pFile,DONT_ERRASE);
         String content = fileManager.ReadFile();
         return WriteSector(content);
@@ -165,14 +170,14 @@ public class VirtualMemory {
         return temp;
     }
     
-    private int[] getSectors(int pSectors[],int pSize){
+    private int[] getSectors(int pSectors[], int pSize){
         int temp[] = new int[pSize];
         if(pSize == 0){
             temp = new int[]{INVALID_VALUE};
         }
         else{
             temp = new int[pSize];
-            for(int sectorIndex = 0 ; sectorIndex<pSize;sectorIndex++){
+            for(int sectorIndex = 0 ; sectorIndex<pSize; sectorIndex++){
                 temp[sectorIndex] = pSectors[sectorIndex];
             }
         }
