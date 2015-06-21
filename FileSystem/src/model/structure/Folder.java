@@ -16,7 +16,8 @@ package model.structure;
  */
 public class Folder extends File<String, File> {
     static String s_Start;
-    static final char EMPTY_SPACE = '|';
+    static final String SEPARATOR = "!";
+    static final char EMPTY_SPACE = ' ';
     static final char NULL_SPACE = '\0';
     static final char END_OF_LINE = '\n';
     static final char SUB_DIR = '└';
@@ -37,7 +38,8 @@ public class Folder extends File<String, File> {
     public boolean addFile(File pFile) {
         if (!containsKey(pFile._Name)) {
             pFile._Parent = this;
-            put(pFile._Name, pFile);
+            String extension = pFile instanceof Archive && !pFile._Name.contains(".") ? ((Archive)pFile).getExtension() : "";
+            put(pFile._Name + extension, pFile);
             updateSize();
             return true;
         }
@@ -90,4 +92,46 @@ public class Folder extends File<String, File> {
             }
         }
     }
+    
+    public String[] find(String pName){
+        s_Start = "";
+        if(_Name.equals(pName)){
+            s_Start += _Name;
+        }
+        aux_find(pName);
+        String result[] = s_Start.split(SEPARATOR);
+        return result;
+    }
+    
+    public void aux_find(String pName){
+        for(Entry<String, File> actual : getContent()){
+            String fileName = actual.getKey();
+            try{
+                Folder content = (Folder)actual.getValue();
+                if(fileName.equals(pName)){
+                    s_Start += content.getPath() + SEPARATOR;
+                }
+                content.aux_find(pName);
+            }
+            catch(Exception Ex){
+                File content = actual.getValue();
+                if(fileName.equals(pName)){
+                    s_Start += content.getPath() + SEPARATOR;
+                }
+                if(pName.startsWith("*")){
+                    String sufix = pName.substring(1);
+                    if(fileName.endsWith(sufix)){
+                        s_Start += content.getPath() + SEPARATOR;
+                    }
+                }
+                if(pName.endsWith("*")){
+                    String prefix = pName.substring(0,pName.length()-1);
+                    if(fileName.startsWith(prefix)){
+                        s_Start += content.getPath() + SEPARATOR; 
+                    } 
+                }
+            }
+        }
+    }
+    
 }

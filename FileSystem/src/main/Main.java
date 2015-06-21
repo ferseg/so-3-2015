@@ -5,7 +5,11 @@
  */
 package main;
 
+import GUI.MainFrame;
+import java.lang.reflect.Array;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import model.structure.Archive;
 import model.structure.File;
 import model.structure.Folder;
@@ -21,7 +25,7 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         
         
         Folder root = new Folder(null, "home");
@@ -44,5 +48,12 @@ public class Main {
           Archive archive11 = new Archive(root, "text.txt");
         System.out.println(root.print() + "\n");
         System.out.println(subFolder.print()); 
+        
+        Pattern pattern = Pattern.compile("[a-z][ a-zA-Z0-9.]*");
+        Matcher matcher = pattern.matcher("file some some.");
+        System.out.println("MATCH? " + matcher.matches());
+        
+        new MainFrame().setVisible(true);
+        
     }
 }

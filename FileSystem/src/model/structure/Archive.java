@@ -6,8 +6,11 @@
 
 package model.structure;
 
+import java.util.Date;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javafx.scene.chart.PieChart;
 
 /**
  *
@@ -21,6 +24,7 @@ public class Archive extends File<Integer, String> {
     
     private String _Extension;
     
+    
     public Archive(File pParent, String pFilename) {
         super(pParent, pFilename);
         _Extension = ".def";
@@ -30,16 +34,23 @@ public class Archive extends File<Integer, String> {
     public Archive(File pParent, String pFilename, String pExtension) {
         super(pParent, pFilename);
         _Extension = pExtension;
-        initParent(pFilename);
+        initParent(pFilename + pExtension);
     }
     
     public boolean addLine(int pLineNumber, String pContent) {
+         _LastModification = new Date();
         if(!containsKey(pLineNumber)) {
             put(pLineNumber, pContent);
             updateSize();
             return true;
         }
         return false;
+    }
+    
+    public boolean addContent(Map<Integer, String> pContent) {
+        putAll(pContent);
+        updateSize();
+        return true;
     }
 
     @Override
@@ -56,10 +67,12 @@ public class Archive extends File<Integer, String> {
 
     @Override
     public boolean renameFile(File pFile, String pNewName) {
+        _LastModification = new Date();
        return pFile._Parent.renameFile(pFile, pNewName);
     }
     
     public boolean renameFile(String pNewName) {
+         _LastModification = new Date();
         return _Parent.renameFile(this, pNewName);
     }
 
