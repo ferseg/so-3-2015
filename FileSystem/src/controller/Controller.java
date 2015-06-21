@@ -7,16 +7,11 @@
 package controller;
 
 import GUI.MainFrame;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import model.structure.Archive;
@@ -58,7 +53,7 @@ public class Controller {
                 "mkdir fs1", "cd fs1", "file some filefs11.txt", "file some filefs12.zip", "cd ..",
                 "mkdir fs2", "cd fs2", "file some filefs21.mp3", "cd ..", "cd ..",
             "mkdir f2",  "cd f2", "file some filef21.some", "cd ..",
-            "mkdir f3", "file some filef21.avi", "cd .."};
+            "mkdir f3", "file some filef21.avi"};
         for(String command : commandsDefault) {
             processCommand(command);
         }
@@ -224,6 +219,8 @@ public class Controller {
                 return processMoveFile(pCommandDescription);
             case Commands.COMMAND_REMOVE:
                 return processRemoveFile(pCommandDescription[FIRST_PARAM]);
+            case Commands.COMMAND_FIND:
+                return processFind(pCommandDescription[FIRST_PARAM]);
             default:
                 addStringToTheLog("[->] Comando no reconocido!!! :(");
                 return false;
@@ -361,6 +358,15 @@ public class Controller {
         System.out.println("FTBR " + fileToBeRemoved.getName());
         removeFile(fileToBeRemoved);
         return false;
+    }
+    
+    public boolean processFind(String filename) {
+        String[] paths = ((Folder) _RootFile).find(filename);
+        addStringToTheLog("[->] Archivos encontrados con el nombre: " + filename);
+        for(String path : paths) {
+            addStringToTheLog("\t[->] : " + path);
+        }
+        return true;
     }
     
     private void refreshTreeView() {

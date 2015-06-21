@@ -16,7 +16,7 @@ package model.structure;
  */
 public final class Commands {
     
-    public static final String VALID_COMMAND_REGEX = "[a-z][ a-zA-Z0-9./\\-_]*";
+    public static final String VALID_COMMAND_REGEX = "[a-z][ a-zA-Z0-9./\\-_\\*]*";
     
     public static final String COMMAND_CREATE = "create";
     public static final String COMMAND_FILE = "file";
