@@ -26,7 +26,7 @@ public class FileManager{
         
     private File _File;
     
-    public FileManager(String pFileName,int pErrase){
+    public FileManager(String pFileName, int pErrase){
         try{
             _File = new File(pFileName); 
             _File.createNewFile();
@@ -41,14 +41,16 @@ public class FileManager{
         }
     }
     
-    public void WriteFile(String pData){
+    public boolean WriteFile(String pData){
         try{
             FileWriter fw = new FileWriter(_File);
             fw.write(pData);
             fw.close();
+            return true;
         }
         catch(Exception Ex){
             System.out.println(OPEN_FILE_ERROR);
+            return false;
         }
     }
     

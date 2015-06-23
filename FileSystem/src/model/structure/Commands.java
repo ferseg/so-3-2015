@@ -28,7 +28,9 @@ public final class Commands {
     public static final String COMMAND_CONT_FILE = "contfile";
     public static final String COMMAND_FILE_PROPERTIES = "verpropiedades";
     public static final String COMMAND_MOVE = "mover";
-    public static final String COMMAND_COPY = "copy";
+    public static final String COMMAND_COPY_V_V = "cpvv";
+    public static final String COMMAND_COPY_V_C = "cpvc";
+    public static final String COMMAND_COPY_C_V = "cpcv";
     public static final String COMMAND_REMOVE = "remove";
     public static final String COMMAND_FIND = "find";
 

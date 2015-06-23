@@ -221,6 +221,12 @@ public class Controller {
                 return processRemoveFile(pCommandDescription[FIRST_PARAM]);
             case Commands.COMMAND_FIND:
                 return processFind(pCommandDescription[FIRST_PARAM]);
+            case Commands.COMMAND_COPY_V_V:
+                return processCOPYVV(pCommandDescription[FIRST_PARAM], pCommandDescription[SECOND_PARAM]);
+            case Commands.COMMAND_COPY_V_C:
+                return processCOPYVC(pCommandDescription[FIRST_PARAM], pCommandDescription[SECOND_PARAM]);
+            case Commands.COMMAND_COPY_C_V:
+                return provessCOPYCV(pCommandDescription[FIRST_PARAM], pCommandDescription[SECOND_PARAM]);
             default:
                 addStringToTheLog("[->] Comando no reconocido!!! :(");
                 return false;
@@ -336,6 +342,11 @@ public class Controller {
         return false;
     }
     
+    /**
+     * Processes the movement of a file to a new direction in the virtual disc
+     * @param pParams
+     * @return 
+     */
     public boolean processMoveFile(String[] pParams) {
         String origin = pParams[FIRST_PARAM];
         String destination = pParams[SECOND_PARAM];
@@ -343,16 +354,25 @@ public class Controller {
         return result;
     }
     
+    /**
+     * List the directories and archives in the current parent
+     * @return 
+     */
     public boolean processListDIR() {
         for(Entry<String, File> current : ((Folder) _CurrentFile).getContent()) {
             File value = current.getValue();
             String name = current.getKey();
-            String type = value instanceof Archive ? "DIR" : "FOLDER";
+            String type = value instanceof Archive ? "ARCH" : "DIR";
             addStringToTheLog("[->] " + type + ": " + name );
         }
         return true;
     }
     
+    /**
+     * Processes the command of remove file
+     * @param pFilename
+     * @return 
+     */
     public boolean processRemoveFile(String pFilename) {
         File fileToBeRemoved = _CurrentFile.getFile(pFilename);
         System.out.println("FTBR " + fileToBeRemoved.getName());
@@ -360,14 +380,116 @@ public class Controller {
         return false;
     }
     
-    public boolean processFind(String filename) {
-        String[] paths = ((Folder) _RootFile).find(filename);
-        addStringToTheLog("[->] Archivos encontrados con el nombre: " + filename);
+    /**
+     * Finds all the appearances of a file in the virtual disc
+     * @param pFilename The name of the file to be found
+     * @return 
+     */
+    public boolean processFind(String pFilename) {
+        String[] paths = ((Folder) _RootFile).find(pFilename);
+        addStringToTheLog("[->] Archivos encontrados con el nombre: " + pFilename);
         for(String path : paths) {
             addStringToTheLog("\t[->] : " + path);
         }
         return true;
     }
+    
+    /**
+     * Copies archive from the virtual disc to another path in the virtual disc
+     * @param pOrigin
+     * @param pDestiny
+     * @return 
+     */
+    public boolean processCOPYVV(String pOrigin, String pDestiny) {
+        File originalFile = _CurrentFile.getFile(pOrigin);
+        if (originalFile != null) {
+            if (originalFile instanceof Archive) {
+                Archive newFile = (Archive)originalFile.clone();
+                boolean result = _RootFile.insertFileInPath(newFile, pDestiny);
+                if(result) {
+                    String content = arrayToString(originalFile.getContent());
+                    Map<Integer, String> resultFromWriting = _VM.WriteSector(content);
+                    newFile.addContent(resultFromWriting);
+                    refreshTreeView();
+                    addStringToTheLog("[->] El archivo se ha copiado exitosamente en: " + pDestiny);
+                    return true;
+                }
+                else {
+                    addStringToTheLog("[->] El archivo no ha podido ser copiado!");
+                }
+            }
+            else {
+                addStringToTheLog("[->] El elemento que desea copiar no es un archivo.");
+            }
+        }
+        else {
+            addStringToTheLog("[->] El archivo que desea copiar no existe!");
+        }
+        return false;
+    }
+    
+    /**
+     * Copies a file from the virtual disc to the computer
+     * @param pOrigin The path in the virtual disc
+     * @param pDestiny The path to the destiny, this must contain the name of the file, for example: /Users/some/archive.txt
+     * @return 
+     */
+    public boolean processCOPYVC(String pOrigin, String pDestiny) {
+        File originalFile = _CurrentFile.getFile(pOrigin);
+        if (originalFile != null) {
+            if (originalFile instanceof Archive) {
+                String content = arrayToString(originalFile.getContent());
+                if (_VM.SectorsToFile(content, pDestiny)) {
+                    addStringToTheLog("[->] El archivo se ha copiado exitosamente en: " + pDestiny);
+                }
+                else {
+                    addStringToTheLog("[->] El archivo no ha podido ser copiado!");
+                }
+            }
+            else {
+                addStringToTheLog("[->] El elemento que desea copiar no es un archivo.");
+            } 
+        }
+        else {
+            addStringToTheLog("[->] El archivo que desea copiar no existe!");
+        }
+        return false;
+    }
+    
+    /**
+     * Copies a file from the computer to the virtual disc
+     * @param pOrigin The path of the original path
+     * @param pDestiny The destiny in the virtual disc this must contain the new name of the archive
+     * @return 
+     */
+    public boolean provessCOPYCV(String pOrigin, String pDestiny) {
+        int pathPivot = pDestiny.lastIndexOf("/");
+        File parent;
+        String filename = pathPivot == -1 ? pDestiny : pDestiny.substring(pathPivot + 1);
+        if(pathPivot != -1) {
+            String path = pDestiny.substring(0, pathPivot);
+            parent = _RootFile.getFile(path);
+        }
+        else {
+            parent = _CurrentFile;
+        }
+        int extensionPivot = pDestiny.lastIndexOf(".");
+        if (extensionPivot != -1) {
+            filename = filename.substring(0, extensionPivot);
+            String extension = filename.substring(extensionPivot);
+            Map<Integer, String> resultFromWriting = _VM.FileToSectors(pOrigin);
+            Archive archive = new Archive(parent, filename, extension);
+            archive.addContent(resultFromWriting);
+            refreshTreeView();
+            addStringToTheLog("[->] El archivo se ha copiado exitosamente en: " + pDestiny);
+            return true;
+        }
+        else {
+            addStringToTheLog("[->] El destino debe poseer un nombre de archivo de destino.!");
+        }
+        return false;
+    }
+
     
     private void refreshTreeView() {
         _View.refreshTreeView(((Folder) _RootFile).print());
@@ -380,5 +502,14 @@ public class Controller {
     private void addStringToTheLog(String pMessage) {
         _View.addToLog(pMessage);
     }
+    
+    private String arrayToString(Set<Entry<Integer, String>> content) {
+        String result = "";
+        for(Entry<Integer, String> current : content) {
+            result += current.getValue();
+        }
+        return result;
+    }
 
+    
 }
