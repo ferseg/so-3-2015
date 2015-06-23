@@ -54,9 +54,9 @@ public class Controller {
                 "mkdir fs2", "cd fs2", "file some filefs21.mp3", "cd ..", "cd ..",
             "mkdir f2",  "cd f2", "file some filef21.some", "cd ..",
             "mkdir f3", "file some filef21.avi"};
-        for(String command : commandsDefault) {
+        /*for(String command : commandsDefault) {
             processCommand(command);
-        }
+        }*/
     }
     
     public void createFile(File pFileParent, String pContent, String pFilename, boolean pShow) {
@@ -473,12 +473,14 @@ public class Controller {
         else {
             parent = _CurrentFile;
         }
-        int extensionPivot = pDestiny.lastIndexOf(".");
+        int extensionPivot = filename.lastIndexOf(".");
         if (extensionPivot != -1) {
-            filename = filename.substring(0, extensionPivot);
+            System.out.println(filename);
+            String finalFilename = filename.substring(0, extensionPivot);
             String extension = filename.substring(extensionPivot);
+            System.out.println("EXT " + extension);
             Map<Integer, String> resultFromWriting = _VM.FileToSectors(pOrigin);
-            Archive archive = new Archive(parent, filename, extension);
+            Archive archive = new Archive(parent, finalFilename, extension);
             archive.addContent(resultFromWriting);
             refreshTreeView();
             addStringToTheLog("[->] El archivo se ha copiado exitosamente en: " + pDestiny);
