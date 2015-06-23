@@ -101,22 +101,18 @@ public class VirtualMemory {
         }
     }
     
-    public void SectorsToFile(int pSectors[],String pFile){
-        String content = EMPTY_STRING;
-        String fileContent[] = SplitString(_FileManager.ReadFile());
-        for(int i= 0;i < pSectors.length;i++){
-            content += fileContent[pSectors[i]];
-        }
-        FileManager fileManager = new FileManager(pFile,ERRASE);
-        fileManager.WriteFile(content);
+    public boolean SectorsToFile(String pContent, String pFile){
+        FileManager fileManager = new FileManager(pFile, ERRASE);
+        return fileManager.WriteFile(pContent);
     }
     
     public Map<Integer, String> FileToSectors(String pFile){
-        FileManager fileManager = new FileManager(pFile,DONT_ERRASE);
+        FileManager fileManager = new FileManager(pFile, DONT_ERRASE);
         String content = fileManager.ReadFile();
         return WriteSector(content);
     }
     
+    @Override
     public String toString(){
         String fileContent[] = SplitString(_FileManager.ReadFile());
         String temp = EMPTY_STRING;
